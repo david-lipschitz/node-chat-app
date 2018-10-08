@@ -6,7 +6,7 @@ const express = require('express');
 const socketIO = require('socket.io');
 //const bodyParser = require('body-parser');
 
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '/../public'); // so that we can use /server and /public from the server directory
 
@@ -65,6 +65,15 @@ io.on('connection', (socket) => {
         // });
     });
 
+    //take the message received and send it to all the clients
+    // socket.on('createLocationMessage', (coords) => {
+    //     io.emit('newMessage', generateMessage('Admin', `${coords.latitude}, ${coords.longitude}`));
+    // });
+    // http://www.google.com/maps?q=-33.787904,18.4623104
+    socket.on('createLocationMessage', (coords) => {
+        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+    });
+    
     socket.on('disconnect', () => {
         console.log('User was disconnected');
     });
