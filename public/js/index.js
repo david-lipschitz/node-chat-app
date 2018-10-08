@@ -1,4 +1,5 @@
 //was inline javascript
+// eslint-disable-next-line
 var socket = io(); //which creates a connection
 
 socket.on('connect', function () {
