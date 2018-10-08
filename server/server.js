@@ -26,18 +26,26 @@ io.on('connection', (socket) => {
     console.log('New user connected');
 
     //socket.emit('newEmail'); //we don't have to specify parameters
-    socket.emit('newMessage', {
-        from: 'John',
-        text: 'See you then',
-        createAt: 123
-    });
+    // socket.emit emits an event to a single connection
+    // socket.emit('newMessage', {
+    //     from: 'John',
+    //     text: 'See you then',
+    //     createAt: 123
+    // });
 
+    //this is the createMessage listener
     socket.on('createMessage', (message) => {
         console.log('createMessage', message);
+        //io.emit emits an event to every single connection
+        io.emit('newMessage', {
+            from: message.from,
+            text: message.text,
+            createdAt: new Date().getTime()
+        });
     });
 
     socket.on('disconnect', () => {
-        console.log('Disconnected from client; user was disconnected');
+        console.log('User was disconnected');
     });
 });
 
