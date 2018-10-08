@@ -55,7 +55,8 @@ io.on('connection', (socket) => {
         console.log('createMessage', message);
         //io.emit emits an event to every single connection
         io.emit('newMessage', generateMessage(message.from, message.text));
-        callback('This is from the server.'); //using acknowledgements
+        //callback('This is from the server.'); //using acknowledgements
+        callback();
         // Broadcast: and list who gets or doesn't get a message
         //  for the next line, everyone gets it except us (the sender)
         // socket.broadcast.emit('newMessage', {
