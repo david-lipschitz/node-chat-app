@@ -25,6 +25,7 @@ app.use(express.static(publicPath)); //Andrew's version
 io.on('connection', (socket) => {
     console.log('New user connected');
 
+    //whilst testing
     //socket.emit('newEmail'); //we don't have to specify parameters
     // socket.emit emits an event to a single connection
     // socket.emit('newMessage', {
@@ -32,6 +33,20 @@ io.on('connection', (socket) => {
     //     text: 'See you then',
     //     createAt: 123
     // });
+
+    // socket.emit from Admin text Welcome to the chat app
+    socket.emit('newMessage', {
+        from: 'Admin',
+        text: 'Welcome to the chat app',
+        createdAt: new Date().getTime()
+    });
+
+    // socket.broadcast.emit from Admin text New user joined
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'New user joined',
+        createdAt: new Date().getTime()
+    });
 
     //this is the createMessage listener
     socket.on('createMessage', (message) => {
@@ -42,6 +57,13 @@ io.on('connection', (socket) => {
             text: message.text,
             createdAt: new Date().getTime()
         });
+        // Broadcast: and list who gets or doesn't get a message
+        //  for the next line, everyone gets it except us (the sender)
+        // socket.broadcast.emit('newMessage', {
+        //     from: message.from,
+        //     text: message.text,
+        //     createdAt: new Date().getTime()
+        // });
     });
 
     socket.on('disconnect', () => {
