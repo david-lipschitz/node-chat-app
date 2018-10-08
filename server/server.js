@@ -38,11 +38,11 @@ io.on('connection', (socket) => {
 
     // socket.emit from Admin text Welcome to the chat app
     //  this one without using the generateMessage function
-    socket.emit('newMessage', {
-        from: 'Admin',
-        text: 'Welcome to the chat app',
-        createdAt: new Date().getTime()
-    });
+    // socket.emit('newMessage', {
+    //     from: 'Admin',
+    //     text: 'Welcome to the chat app',
+    //     createdAt: new Date().getTime()
+    // });
 
     //  the rest using the generateMessage function
     socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
@@ -51,10 +51,11 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('newMessage', generateMessage('Admin','New user joined'));
 
     //this is the createMessage listener
-    socket.on('createMessage', (message) => {
+    socket.on('createMessage', (message, callback) => {
         console.log('createMessage', message);
         //io.emit emits an event to every single connection
         io.emit('newMessage', generateMessage(message.from, message.text));
+        callback('This is from the server.'); //using acknowledgements
         // Broadcast: and list who gets or doesn't get a message
         //  for the next line, everyone gets it except us (the sender)
         // socket.broadcast.emit('newMessage', {
