@@ -2,6 +2,25 @@
 // eslint-disable-next-line
 var socket = io(); //which creates a connection
 
+function scrollToBottom () {
+    // Selectors
+    var messages = jQuery('#messages'); // a jQuery selector call for all elements with an id of messages
+    var newMessage = messages.children('li:last-child');
+    // Heights
+    var clientHeight = messages.prop('clientHeight'); // prop method to work across browsers
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    //var newMessageHeight = newMessage.$(selector).innerHeight(); //VS Code created $..
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+
+    //if the user is near the bottom, scroll to the bottom, otherwise, leave the user where he is because he might be looking for something higher up
+    if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+        //console.log('Should scroll');
+        messages.scrollTop(scrollHeight);
+    }
+}
+
 socket.on('connect', function () {
     console.log('Connected to server');
 
@@ -34,7 +53,7 @@ socket.on('newMessage', function (message) {
     });
 
     jQuery('#messages').append(html);
-
+    scrollToBottom();
 });
 
 // whilst building the app
@@ -75,9 +94,7 @@ socket.on('newLocationMessage', function (message) {
     });
 
     jQuery('#messages').append(html);
-
-
-
+    scrollToBottom();
 });
 
 jQuery('#message-form').on('submit', function (e) {
