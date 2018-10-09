@@ -16,9 +16,11 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function (message) {
-    console.log('newMessage', message);
+    //console.log('newMessage', message);
+    // eslint-disable-next-line
+    var formattedTime = moment(message.createdAt).format('h:mm a');
     var li = jQuery('<li></li>'); //use jQuery to create an element and then add it to the DOM
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
     jQuery('#messages').append(li);
 });
@@ -38,10 +40,12 @@ socket.on('newMessage', function (message) {
 // });
 
 socket.on('newLocationMessage', function (message) {
+    // eslint-disable-next-line
+    var formattedTime = moment(message.createdAt).format('h:mm a');
     var li = jQuery('<li></li>');
     var a = jQuery('<a target="_blank">My Current Location</a>'); //the anchor tag
 
-    li.text(`${message.from}: `);
+    li.text(`${message.from} ${formattedTime}: `);
     a.attr('href', message.url);
     li.append(a);
     jQuery('#messages').append(li);    

@@ -6,9 +6,17 @@ var moment = require('moment');
 // var date = new Date();
 // console.log(date.getMonth());
 
-var date = moment();
+var createdAt = 1234;
+var date = moment(createdAt); // also var date = moment();
 
 //date.add(10, 'year').subtract(11, 'months');
 //date.add(15, 'hour');
 
+//console.log(date.format('Do MMM YYYY h:mm a'));
+
 console.log(date.format('Do MMM YYYY h:mm a'));
+
+//new Date().getTime()
+var someTimestamp = moment().valueOf();
+console.log(someTimestamp);
+//console.log(someTimestamp.format('Do MMM YYYY h:mm a'));
