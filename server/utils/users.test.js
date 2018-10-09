@@ -13,6 +13,7 @@ describe('Users', () => {
             name: 'David',
             room: 'The Office Fans'
         };
+        // eslint-disable-next-line
         var resUser = users.addUser(user.id, user.name, user.room);
 
         expect(users.users).toEqual([user]);
