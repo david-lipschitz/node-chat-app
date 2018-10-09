@@ -7,6 +7,7 @@ const socketIO = require('socket.io');
 //const bodyParser = require('body-parser');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
 
 const publicPath = path.join(__dirname, '/../public'); // so that we can use /server and /public from the server directory
 
@@ -45,10 +46,33 @@ io.on('connection', (socket) => {
     // });
 
     //  the rest using the generateMessage function
-    socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
+    //socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
 
     // socket.broadcast.emit from Admin text New user joined
-    socket.broadcast.emit('newMessage', generateMessage('Admin','New user joined'));
+    //socket.broadcast.emit('newMessage', generateMessage('Admin','New user joined'));
+
+    socket.on('join', (params, callback) => {
+        if (!isRealString(params.name) || !isRealString(params.room)) {
+            callback('Name and room name are required');
+        }
+
+        socket.join(params.room);
+        //socket.leave('The Office Fans');
+
+        //how to target specific users
+        // io.emit emits to every user
+        // socket.broadcast.emit sends message to everyone except for the current user
+        // socket.emit emits an event to one user
+
+        // io.emit -> io.to('The Office Fans').emit
+        // socket.broadcast.emit -> socket.broadcast.to('The Office Fans').emit
+        // socket.emit 
+
+        socket.emit('newMessage', generateMessage('Admin','Welcome to the chat app'));
+        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin',`${params.name} has joined.`));
+
+        callback();
+    });
 
     //this is the createMessage listener
     socket.on('createMessage', (message, callback) => {

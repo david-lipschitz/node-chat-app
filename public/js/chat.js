@@ -22,12 +22,23 @@ function scrollToBottom () {
 }
 
 socket.on('connect', function () {
-    console.log('Connected to server');
+    // console.log('Connected to server');
 
     // socket.emit('createMessage', {
     //     from: 'David',
     //     text: 'Yup. That works for me.'
     // });
+
+    var params = jQuery.deparam(window.location.search);
+
+    socket.emit('join', params, function (err) {
+        if (err) {
+            alert(err);
+            window.location.href = '/'; //redirect back to root page
+        } else {
+            console.log('No error');
+        }
+    }); //emitted by the client and listened by the server
 });
 
 socket.on('disconnect', function () {
