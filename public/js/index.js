@@ -19,10 +19,22 @@ socket.on('newMessage', function (message) {
     //console.log('newMessage', message);
     // eslint-disable-next-line
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>'); //use jQuery to create an element and then add it to the DOM
-    li.text(`${message.from} ${formattedTime}: ${message.text}`);
+    // var li = jQuery('<li></li>'); //use jQuery to create an element and then add it to the DOM
+    // li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
-    jQuery('#messages').append(li);
+    // jQuery('#messages').append(li);
+
+    //render this in #message-template in index.html!!
+    var template = jQuery('#message-template').html();
+    // eslint-disable-next-line
+    var html = Mustache.render(template, {
+        text: message.text,
+        from: message.from,
+        createdAt: formattedTime
+    });
+
+    jQuery('#messages').append(html);
+
 });
 
 // whilst building the app
@@ -40,15 +52,32 @@ socket.on('newMessage', function (message) {
 // });
 
 socket.on('newLocationMessage', function (message) {
+    //console.log('dl', message.url);
     // eslint-disable-next-line
     var formattedTime = moment(message.createdAt).format('h:mm a');
-    var li = jQuery('<li></li>');
-    var a = jQuery('<a target="_blank">My Current Location</a>'); //the anchor tag
 
-    li.text(`${message.from} ${formattedTime}: `);
-    a.attr('href', message.url);
-    li.append(a);
-    jQuery('#messages').append(li);    
+    //this was before Mustache
+    //var li = jQuery('<li></li>');
+    //var a = jQuery('<a target="_blank">My Current Location</a>'); //the anchor tag
+    //li.text(`${message.from} ${formattedTime}: `);
+    //a.attr('href', message.url);
+    //li.append(a);
+    //jQuery('#messages').append(li);    
+
+    //this is using Mustache
+    //render this in #message-template in index.html!!
+    var template = jQuery('#location-message-template').html(); //.html gets its innerhtml back
+    // eslint-disable-next-line
+    var html = Mustache.render(template, { //template and the data you want to render into it
+        url: message.url,
+        from: message.from,
+        createdAt: formattedTime
+    });
+
+    jQuery('#messages').append(html);
+
+
+
 });
 
 jQuery('#message-form').on('submit', function (e) {

@@ -2,7 +2,9 @@ var expect = require('expect');
 
 var {generateMessage, generateLocationMessage} = require('./message');
 
+// eslint-disable-next-line
 describe('generateMessage', () => {
+    // eslint-disable-next-line
     it('should generate correct message object', () => {
         // no done required as this is a synchronous test
         // store result in variable
@@ -19,7 +21,9 @@ describe('generateMessage', () => {
     });
 });
 
+// eslint-disable-next-line
 describe('generateLocationMessage', () => {
+    // eslint-disable-next-line
     it('should generate correct location object', () => {
         var from = 'David';
         var latitude = 15;
