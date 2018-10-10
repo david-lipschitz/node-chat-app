@@ -44,6 +44,33 @@ class Users {
         this.users.push(user);
         return user;
     }
+    removeUser (id) {
+        // return user that was removed
+        //var thisUser = this.users.filter((user) => user.id === id)[0]; 
+        var thisUser = this.getUser(id); //this is the same as the previous line
+        this.users = this.users.filter((user) => user.id !== id);
+        return thisUser;
+    }
+    getUser (id) { //id is a string
+        // find a user object by id returning the user object
+        // get the first element of the array, which will be the only element found by the filter
+        return this.users.filter((user) => user.id === id)[0]; 
+    }
+    getUserList (room) {
+        // look through all the users finding the people in the room
+        // eg ['Mike', 'Jen', 'Jody']
+        // var users = this.users.filter((user) => {
+        //     return user.room === room;
+        // });
+        // the next line has the same functionality as the previous three lines
+        var users = this.users.filter((user) => user.room === room);
+        // var namesArray = users.map((user) => { //map lets us use the property we want instead
+        //     return user.name;
+        // });
+        var namesArray = users.map((user) => user.name);
+
+        return namesArray;
+    }
 }
 
 module.exports = {Users};

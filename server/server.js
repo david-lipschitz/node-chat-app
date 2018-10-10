@@ -8,6 +8,7 @@ const socketIO = require('socket.io');
 
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
+const {Users} = require('./utils/users');
 
 const publicPath = path.join(__dirname, '/../public'); // so that we can use /server and /public from the server directory
 
@@ -19,6 +20,7 @@ const port = process.env.PORT;
 var app = express();
 var server = http.createServer(app); // we are going to modify the way app works with the html library that we have loaded
 var io = socketIO(server); //allows us to emit or listen to events
+var users = new Users(); //allows us to call users and manipulate data
 
 //app.use(bodyParser.json()); //the middleware we need to give to express
 //app.use(express.static(__dirname + '/../public')); -- mine
@@ -53,10 +55,16 @@ io.on('connection', (socket) => {
 
     socket.on('join', (params, callback) => {
         if (!isRealString(params.name) || !isRealString(params.room)) {
-            callback('Name and room name are required');
+            return callback('Name and room name are required');
         }
 
         socket.join(params.room);
+        users.removeUser(socket.id); //remove user from any existing rooms
+        users.addUser(socket.id, params.name, params.room);
+
+        // emit an event to everyone about the new user
+        io.to(params.room).emit('updateUserList', users.getUserList(params.room)); // see chat.js for updateUserList
+
         //socket.leave('The Office Fans');
 
         //how to target specific users
@@ -100,7 +108,12 @@ io.on('connection', (socket) => {
     });
     
     socket.on('disconnect', () => {
-        console.log('User was disconnected');
+        //console.log('User was disconnected');
+        var user = users.removeUser(socket.id);
+        if (user) { //if user was removed
+            io.to(user.room).emit('updateUserList', users.getUserList(user.room)); //update the user list
+            io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`)); //update a message: emit a message from Admin to everyone
+        }
     });
 });
 
