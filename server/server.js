@@ -84,9 +84,13 @@ io.on('connection', (socket) => {
 
     //this is the createMessage listener
     socket.on('createMessage', (message, callback) => {
-        console.log('createMessage', message);
+        //console.log('createMessage', message);
+        var user = users.getUser(socket.id);
+        if (user && isRealString(message.text)) {
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
         //io.emit emits an event to every single connection
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        //io.emit('newMessage', generateMessage(message.from, message.text)); - this goes to everyone
         //callback('This is from the server.'); //using acknowledgements
         callback();
         // Broadcast: and list who gets or doesn't get a message
@@ -104,7 +108,13 @@ io.on('connection', (socket) => {
     // });
     // http://www.google.com/maps?q=-33.787904,18.4623104
     socket.on('createLocationMessage', (coords) => {
-        io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+        //io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));  - our original createLocationMessage
+
+        var user = users.getUser(socket.id);
+        if (user) {
+            io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+        }
+
     });
     
     socket.on('disconnect', () => {

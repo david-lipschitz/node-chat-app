@@ -124,8 +124,8 @@ jQuery('#message-form').on('submit', function (e) {
 
     var messageTextbox = jQuery('[name=message]');
 
+    //        from: 'User', used to be before text: DL181010
     socket.emit('createMessage', {
-        from: 'User',
         text: messageTextbox.val()
     }, function() {
         messageTextbox.val('');
