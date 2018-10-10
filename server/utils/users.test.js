@@ -7,6 +7,7 @@ describe('Users', () => {
 
     //create seed data
     var users; 
+    // eslint-disable-next-line
     beforeEach(() => {
         users = new Users();
         users.users = [{
@@ -38,6 +39,7 @@ describe('Users', () => {
         expect(users.users).toEqual([user]);
     });
 
+    // eslint-disable-next-line
     it('should remove a user', () => {
         var userId = '2';
         var user = users.removeUser(userId);
@@ -49,6 +51,7 @@ describe('Users', () => {
         expect(users.users.length).toBe(2);
     });
 
+    // eslint-disable-next-line
     it('should not remove a user', () => {
         //eg pass 44 as an id
         var userId = '44';
@@ -58,6 +61,7 @@ describe('Users', () => {
         expect(users.users.length).toBe(3);
     });
 
+    // eslint-disable-next-line
     it('should find user', () => {
         var userId = '2';
         var user = users.getUser(userId);
@@ -67,6 +71,7 @@ describe('Users', () => {
         expect(user.id).toBe(userId);
     });
 
+    // eslint-disable-next-line
     it('should not find user', () => {
         var user = users.getUser('44');
         //console.log(userList);
@@ -75,12 +80,14 @@ describe('Users', () => {
         expect(user).toNotExist; //this line same as previous line
     });
 
+    // eslint-disable-next-line
     it('should return names for node course', () => {
         var userList = users.getUserList('Node Course');
 
         expect(userList).toEqual(['Mike', 'Julie']);
     });
 
+    // eslint-disable-next-line
     it('should return names for react course', () => {
         var userList = users.getUserList('React Course');
 
